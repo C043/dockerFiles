@@ -8,6 +8,11 @@ services:
       POSTGRES_DB: miniflux
     volumes:
       - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "miniflux", "-d", "miniflux"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   miniflux:
     restart: unless-stopped
     image: miniflux/miniflux:latest
@@ -17,7 +22,9 @@ services:
       - DATABASE_URL=postgres://miniflux:2014@db/miniflux?sslmode=disable
       - ADMIN_USERNAME=admin
       - ADMIN_PASSWORD=2014
+      - RUN_MIGRATIONS=1
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 volumes:
   db_data:
