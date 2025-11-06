@@ -14,4 +14,4 @@ services:
       - WATCHTOWER_NOTIFICATIONS_LEVEL=info
       - TZ=Europe/Rome
       - WATCHTOWER_HTTP_API_TOKEN=${WATCHTOWER_API_TOKEN}
-    command: --http-api-metrics --interval 300 --cleanup
+    command: --http-api-metrics --cleanup
