@@ -1,0 +1,45 @@
+services:
+  forgejo:
+    image: codeberg.org/forgejo/forgejo:13
+    container_name: forgejo
+    depends_on:
+      - db
+    environment:
+      USER_UID: 1000
+      USER_GID: 1000
+
+      # DATABASE
+      FORGEJO__database__DB_TYPE: postgres
+      FORGEJO__database__HOST: db:5432
+      FORGEJO__database__NAME: forgejo
+      FORGEJO__database__USER: forgejo
+      FORGEJO__database__PASSWD: ${FORGEJO_DB_PASSWORD}
+
+      # SERVER
+      # Se lo tieni solo in LAN, puoi mettere l'IP del server o un hostname locale
+      FORGEJO__server__DOMAIN: ${FORGEJO_DOMAIN}
+      FORGEJO__server__ROOT_URL: ${FORGEJO_ROOT_URL}
+      FORGEJO__server__SSH_DOMAIN: ${FORGEJO_SSH_DOMAIN}
+      FORGEJO__server__SSH_PORT: ${FORGEJO_SSH_PORT}
+
+    volumes:
+      - ./data:/data
+      - /mnt/ssd/forgejo-repos:/data/git/repositories
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+    ports:
+      - 5001:3000
+      - 2222:22
+    restart: unless-stopped
+
+  db:
+    image: postgres:16
+    container_name: forgejo-db
+    environment:
+      POSTGRES_DB: forgejo
+      POSTGRES_USER: forgejo
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    restart: unless-stopped
