@@ -25,6 +25,7 @@ services:
       - RUN_MIGRATIONS=1
       - FETCHER_ALLOW_PRIVATE_NETWORKS=1
       - BASE_URL=http://100.115.7.120:8080
+      - DISABLE_HSTS=1
 
     depends_on:
       db:
