@@ -1,0 +1,11 @@
+services:
+  watcharr:
+    image: ghcr.io/sbondco/watcharr:latest
+    container_name: watcharr
+    ports:
+      - "3080:3080"
+    volumes:
+      - ./watcharr_data:/data
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Rome
